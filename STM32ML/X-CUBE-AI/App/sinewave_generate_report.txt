@@ -1,0 +1,110 @@
+Neural Network Tools for STM32AI v1.5.1 (STM.ai v7.0.0-RC8)
+Created date          : 2021-10-06 09:16:12
+Parameters            : generate --name sinewave -m /Users/beningo/Dropbox/AMP/DSP/ML_WorkshopFiles/model.tflite --type tflite --compression 1 --verbosity 1 --workspace /var/folders/l3/4x_x6z9x0zx47b1m2f05zvzw0000gn/T/mxAI_workspace10482797179845213826519585891870241 --output /Users/beningo/.stm32cubemx
+
+Exec/report summary (generate)
+------------------------------------------------------------------------------------------------------------------------
+model file            : /Users/beningo/Dropbox/AMP/DSP/ML_WorkshopFiles/model.tflite
+type                  : tflite
+c_name                : sinewave
+workspace dir         : /private/var/folders/l3/4x_x6z9x0zx47b1m2f05zvzw0000gn/T/mxAI_workspace10482797179845213826519585891870241
+output dir            : /Users/beningo/.stm32cubemx
+
+model_name            : model
+model_hash            : ac2d6d8bf05a3b1c846668704bacc2b3
+input                 : serving_default_dense_2_input0_int8 [1 items, 1 B, ai_i8, scale=0.024628592655062675, zero_point=-128, (1, 1, 1, 1)]
+inputs (total)        : 1 B
+output                : dense_2 [1 items, 1 B, ai_i8, scale=0.008391165174543858, zero_point=6, (1, 1, 1, 1)]
+outputs (total)       : 1 B
+params #              : 321 items (420 B)
+macc                  : 321
+weights (ro)          : 420 B (420 B)
+activations (rw)      : 32 B (32 B) 
+ram (total)           : 34 B (34 B) = 32 + 1 + 1
+
+Model name - model ['serving_default_dense_2_input0_int8'] ['dense_2']
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+id   layer (type)                                  oshape   param/size   macc   connected to                          |   c_size   c_macc         c_type       
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+0    serving_default_dense_2_input0_int8 (Input)   (c:1)                                                              |                          
+     dense_0 (Dense)                               (c:16)   32/80        32     serving_default_dense_2_input0_int8   |                           dense(i)[0]  
+     nl_0_nl (Nonlinearity)                        (c:16)                16     dense_0                               |            -16(-100.0%)  
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+1    dense_1 (Dense)                               (c:16)   272/320      272    nl_0_nl                               |                           dense(i)[1]  
+     nl_1_nl (Nonlinearity)                        (c:16)                16     dense_1                               |            -16(-100.0%)  
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+2    dense_2 (Dense)                               (c:1)    17/20        17     nl_1_nl                               |                           dense(i)/o[2]
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+model/c-model: macc=353/321 -32(-9.1%) weights=420/420  activations=--/32 io=--/2
+
+
+
+Generated C-graph summary
+------------------------------------------------------------------------------------------------------------------------
+model name            : model
+c-name                : sinewave
+c-node #              : 3
+c-array #             : 10
+activations size      : 32
+weights size          : 420
+macc                  : 321
+inputs                : ['serving_default_dense_2_input0_int8_output']
+outputs               : ['dense_2_output']
+
+
+
+C-Arrays (10)
+------------------------------------------------------------------------------------------------------------------------
+c_id  name (*_array)                              item/size           mem-pool     c-type         fmt     comment            
+------------------------------------------------------------------------------------------------------------------------
+0     serving_default_dense_2_input0_int8_output  1/1                 user         int8_t         int/sa  /input             
+1     dense_0_output                              16/16               activations  int8_t         int/sa                     
+2     dense_1_output                              16/16               activations  int8_t         int/sa                     
+3     dense_2_output                              1/1                 user         int8_t         int/sa  /output            
+4     dense_0_weights                             16/16               weights      const int8_t   int/sa                     
+5     dense_0_bias                                16/64               weights      const int32_t  int/sa                     
+6     dense_1_weights                             256/256             weights      const int8_t   int/sa                     
+7     dense_1_bias                                16/64               weights      const int32_t  int/sa                     
+8     dense_2_weights                             16/16               weights      const int8_t   int/sa                     
+9     dense_2_bias                                1/4                 weights      const int32_t  int/sa                     
+------------------------------------------------------------------------------------------------------------------------
+
+
+
+C-Layers (3)
+------------------------------------------------------------------------------------------------------------------------
+c_id  name (*_layer)  id  layer_ macc        rom         tensors                                        shape (array id)                       
+------------------------------------------------------------------------------------------------------------------------
+0     dense_0         0   dense  32          80          I: serving_default_dense_2_input0_int8_output  (1, 1, 1, 1) (0)                       
+                                                         W: dense_0_weights                                                                    
+                                                         W: dense_0_bias                                                                       
+                                                         O: dense_0_output                              (1, 1, 1, 16) (1)                      
+------------------------------------------------------------------------------------------------------------------------
+1     dense_1         1   dense  272         320         I: dense_0_output                              (1, 1, 1, 16) (1)                      
+                                                         W: dense_1_weights                                                                    
+                                                         W: dense_1_bias                                                                       
+                                                         O: dense_1_output                              (1, 1, 1, 16) (2)                      
+------------------------------------------------------------------------------------------------------------------------
+2     dense_2         2   dense  17          20          I: dense_1_output                              (1, 1, 1, 16) (2)                      
+                                                         W: dense_2_weights                                                                    
+                                                         W: dense_2_bias                                                                       
+                                                         O: dense_2_output                              (1, 1, 1, 1) (3)                       
+------------------------------------------------------------------------------------------------------------------------
+
+
+
+Complexity report per layer - macc=321 weights=420 act=32 ram_io=2
+------------------------------------------------------------------------
+id   name      c_macc                    c_rom                     c_id
+------------------------------------------------------------------------
+0    dense_0   ||                10.0%   ||||              19.0%   [0] 
+1    dense_1   ||||||||||||||||  84.7%   ||||||||||||||||  76.2%   [1] 
+2    dense_2   |                  5.3%   |                  4.8%   [2] 
+
+Generated files (5)
+-------------------------------------------------------
+/Users/beningo/.stm32cubemx/sinewave_config.h
+/Users/beningo/.stm32cubemx/sinewave.h
+/Users/beningo/.stm32cubemx/sinewave.c
+/Users/beningo/.stm32cubemx/sinewave_data.h
+/Users/beningo/.stm32cubemx/sinewave_data.c
